@@ -326,7 +326,7 @@ export default function FrenchPracticeApp() {
             </div>
 
             <div
-              className="rounded-2xl border border-zinc-300 bg-white p-4 shadow-sm leading-8 min-h-24 sm:min-h-28"
+              className="rounded-2xl border border-zinc-300 bg-white p-4 shadow-sm leading-8 min-h-24 sm:min-h-28 select-none [-webkit-user-select:none] [-webkit-touch-callout:none]"
               onClick={(e) => {
                 if (mode !== "range") return;
                 if (
@@ -483,7 +483,7 @@ export default function FrenchPracticeApp() {
             "fixed top-0 right-0 h-full w-72 sm:w-96 bg-white z-50 shadow-2xl p-4 space-y-4 transform transition-transform duration-300 " +
             (settingsOpen
               ? "translate-x-0"
-              : "translate-x-full pointer-events-none")
+              : "translate-x-full pointer-events-none invisible")
           }
         >
           <div className="flex items-center justify-between">
