@@ -224,15 +224,15 @@ export default function FrenchPracticeApp() {
 
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 sm:pt-0 pt-14 pb-24 sm:pb-0">
-      {/* Mobile top blur background under fixed tabs */}
-      <div className="sm:hidden fixed top-0 inset-x-0 h-14 bg-white/60 backdrop-blur-md z-30 border-b border-zinc-200/50" />
       <div className="max-w-5xl mx-auto p-6 space-y-6">
         <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-2xl font-semibold">フランス語発音トレーナー</h1>
+          <h1 className="text-2xl font-semibold text-center">
+            フランス語発音トレーナー
+          </h1>
 
           <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
             {/* Mode toggle */}
-            <div className="inline-flex rounded-xl border border-zinc-300 overflow-hidden fixed top-3 left-1/2 -translate-x-1/2 z-40 sm:static sm:translate-x-0 sm:top-auto sm:left-auto bg-white">
+            <div className="inline-flex rounded-xl border border-zinc-300 overflow-hidden fixed top-3 left-1/2 -translate-x-1/2 z-40 sm:static sm:translate-x-0 sm:top-auto sm:left-auto bg-white/95 shadow-xl sm:bg-white sm:shadow-none">
               <button
                 className={
                   "px-3 py-2 text-sm " +
