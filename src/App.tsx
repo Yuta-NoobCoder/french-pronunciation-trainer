@@ -37,15 +37,19 @@ export default function FrenchPracticeApp() {
   useEffect(() => {
     try {
       // migrate from old keys if present
-      const legacyCfg = localStorage.getItem("fp142_cfg");
-      const legacyText = localStorage.getItem("fp142_text");
+      const legacyCfg = localStorage.getItem(
+        "french_pronounciation_trainer_cfg"
+      );
+      const legacyText = localStorage.getItem(
+        "french_pronounciation_trainer_text"
+      );
       if (!localStorage.getItem(CFG_KEY) && legacyCfg) {
         localStorage.setItem(CFG_KEY, legacyCfg);
-        localStorage.removeItem("fp142_cfg");
+        localStorage.removeItem("french_pronounciation_trainer_cfg");
       }
       if (!localStorage.getItem(TEXT_KEY) && legacyText != null) {
         localStorage.setItem(TEXT_KEY, legacyText);
-        localStorage.removeItem("fp142_text");
+        localStorage.removeItem("french_pronounciation_trainer_text");
       }
 
       const saved = JSON.parse(localStorage.getItem(CFG_KEY) || "{}");
@@ -268,8 +272,14 @@ export default function FrenchPracticeApp() {
               onClick={() => setSettingsOpen(true)}
               title="詳細設定"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
               </svg>
             </button>
             {/* Settings trigger moved to floating button (mobile) */}
