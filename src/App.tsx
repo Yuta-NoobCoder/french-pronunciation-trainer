@@ -211,7 +211,7 @@ export default function FrenchPracticeApp() {
             <div className="inline-flex rounded-xl border border-zinc-300 overflow-hidden fixed top-3 left-1/2 -translate-x-1/2 z-40 sm:static sm:translate-x-0 sm:top-auto sm:left-auto bg-white/95 shadow-xl sm:bg-white sm:shadow-none">
               <button
                 className={
-                  "px-3 py-2 text-sm " +
+                  "px-2 py-2 text-sm " +
                   (mode === "word"
                     ? "bg-zinc-900 text-white"
                     : "bg-white hover:bg-zinc-100")
@@ -223,7 +223,7 @@ export default function FrenchPracticeApp() {
               </button>
               <button
                 className={
-                  "px-3 py-2 text-sm border-l border-zinc-300 " +
+                  "px-2 py-2 text-sm border-l border-zinc-300 " +
                   (mode === "range"
                     ? "bg-zinc-900 text-white"
                     : "bg-white hover:bg-zinc-100")
