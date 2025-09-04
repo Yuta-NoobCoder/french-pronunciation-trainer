@@ -13,13 +13,12 @@ export default function FrenchPracticeApp() {
   const tokens = useMemo(() => tokenizeFrench(raw), [raw]);
 
   // ---- Mode ----
-  const [mode, setMode] = useState<Mode>("range");
+  const [mode, setMode] = useState<Mode>("word");
 
   // ---- Range selection (2点クリック & ドラッグ対応) ----
   const [anchor, setAnchor] = useState<number | null>(null); // 1回目のクリック位置
   const [selStart, setSelStart] = useState<number | null>(null);
   const [selEnd, setSelEnd] = useState<number | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
   const [autoPlayOnSelect, setAutoPlayOnSelect] = useState(false);
 
   // ---- Voice ----
@@ -151,65 +150,36 @@ export default function FrenchPracticeApp() {
   function clickToken(i: number) {
     const t = tokens[i];
 
-    // 単語モードのときだけクリックで発声
+    // 単語モード：クリックで即時再生
     if (mode === "word") {
       if (t.kind === "word") speak(normalizeQuotes(t.text));
       return;
     }
-    // 範囲モードではクリックは使わず（Pointer系で処理）
-  }
 
-  // ドラッグでも範囲設定可能（任意）
-  function onTokenPointerDown(i: number, e: React.PointerEvent) {
-    if (mode !== "range") return;
-    // モバイルで pointerup 後に click が発生して解除されるのを防ぐ
-    e.preventDefault();
-    (e.target as HTMLElement).setPointerCapture(e.pointerId);
-    setIsDragging(true);
-
-    // 既存選択をクリック → 解除（アンカー未設定時のみ）
-    if (anchor === null && isIndexInSelection(i)) {
+    // 範囲モード：2点クリックのみ
+    // 既存選択上をクリック → 解除
+    if (isIndexInSelection(i) && anchor === null) {
       clearSelection();
       return;
     }
 
+    // 1点目
     if (anchor === null) {
-      // 1点目：アンカー設定（プレビューは単点）
       setAnchor(i);
       setSelStart(i);
       setSelEnd(i);
-    } else {
-      // 2点目以降の押下：範囲プレビュー更新
-      setSelStart(anchor);
-      setSelEnd(i);
-    }
-  }
-  function onTokenPointerEnter(i: number) {
-    if (mode !== "range" || !isDragging) return;
-    setSelEnd(i);
-  }
-  function onTokenPointerUp(i: number, e: React.PointerEvent) {
-    if (mode !== "range") return;
-    try {
-      (e.target as HTMLElement).releasePointerCapture(e.pointerId);
-    } catch {}
-    setIsDragging(false);
-
-    if (anchor === null) return;
-
-    // 直前がドラッグでなく単点クリックの場合は、アンカーを維持して2点目待ち
-    // selStart/selEnd は更新済みなので比較で判定
-    if (selStart === anchor && selEnd === anchor && i === anchor) {
-      // 1回目のクリック完了：アンカー保持、確定しない
       return;
     }
 
-    // ドラッグ完了、または2回目のクリックで範囲確定
+    // 2点目 → 範囲確定
+    setSelStart(anchor);
     setSelEnd(i);
     const text = selectedTextAfter(anchor, i);
     setAnchor(null);
     if (autoPlayOnSelect && text && text.trim()) speak(text);
   }
+
+  // ドラッグ機能は廃止（2点クリックのみ）
 
   // anchorとiから即時プレビュー用テキストを作る
   function selectedTextAfter(a: number, b: number): string {
@@ -259,7 +229,7 @@ export default function FrenchPracticeApp() {
                     : "bg-white hover:bg-zinc-100")
                 }
                 onClick={() => setMode("range")}
-                title="2点クリックまたはドラッグで範囲選択"
+                title="2点クリックで範囲選択"
               >
                 範囲選択モード
               </button>
@@ -319,7 +289,7 @@ export default function FrenchPracticeApp() {
               <label className="text-sm font-medium">
                 {mode === "word"
                   ? "単語モード：単語をクリックして再生"
-                  : "範囲選択モード：2点クリックまたはドラッグして範囲選択（余白をクリックして選択解除）"}
+                  : "範囲選択モード：2点クリックで範囲選択（余白クリックで解除）"}
               </label>
               {mode === "range" && (
                 <button
@@ -357,7 +327,6 @@ export default function FrenchPracticeApp() {
 
             <div
               className="rounded-2xl border border-zinc-300 bg-white p-4 shadow-sm leading-8 min-h-24 sm:min-h-28"
-              onPointerLeave={() => setIsDragging(false)}
               onClick={(e) => {
                 if (mode !== "range") return;
                 if (
@@ -435,9 +404,6 @@ export default function FrenchPracticeApp() {
                   <span
                     key={i}
                     onClick={() => clickToken(i)}
-                    onPointerDown={(e) => onTokenPointerDown(i, e)}
-                    onPointerEnter={() => onTokenPointerEnter(i)}
-                    onPointerUp={(e) => onTokenPointerUp(i, e)}
                     className={
                       base +
                       " " +
