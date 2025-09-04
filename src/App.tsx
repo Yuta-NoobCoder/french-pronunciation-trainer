@@ -29,6 +29,8 @@ export default function FrenchPracticeApp() {
   const [pitch, setPitch] = useState(1);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
+  const [settingsOpen, setSettingsOpen] = useState(false); // mobile only
+
   // persist minimal settings
   const CFG_KEY = "fr_pron_cfg";
   const TEXT_KEY = "fr_pron_text";
@@ -258,225 +260,263 @@ export default function FrenchPracticeApp() {
                 範囲選択モード
               </button>
             </div>
-            {/* Voice controls tucked into details */}
-            <details className="ml-auto sm:ml-0">
-              <summary className="cursor-pointer select-none rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm">
-                詳細設定
-              </summary>
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                <select
-                  className="rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm"
-                  value={voiceURI}
-                  onChange={(e) => setVoiceURI(e.target.value)}
-                  title="Voice"
-                >
-                  {voices.map((v) => {
-                    const id = v.voiceURI || v.name;
-                    const label = `${v.name} ${v.lang ? `(${v.lang})` : ""}`;
-                    return (
-                      <option key={id} value={id}>
-                        {label}
-                      </option>
-                    );
-                  })}
-                </select>
-                <label className="flex items-center gap-2 text-sm">
-                  速度
-                  <input
-                    type="range"
-                    min={0.5}
-                    max={1.2}
-                    step={0.05}
-                    value={rate}
-                    onChange={(e) => setRate(parseFloat(e.target.value))}
-                  />
-                  <span className="tabular-nums">{rate.toFixed(2)}</span>
-                </label>
-                <label className="flex items-center gap-2 text-sm">
-                  ピッチ
-                  <input
-                    type="range"
-                    min={0.8}
-                    max={1.4}
-                    step={0.05}
-                    value={pitch}
-                    onChange={(e) => setPitch(parseFloat(e.target.value))}
-                  />
-                  <span className="tabular-nums">{pitch.toFixed(2)}</span>
-                </label>
-                {mode === "range" && (
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      className="size-4"
-                      checked={autoPlayOnSelect}
-                      onChange={(e) => setAutoPlayOnSelect(e.target.checked)}
-                    />
-                    選択で自動再生
-                  </label>
-                )}
-              </div>
-            </details>
+            {/* Settings trigger (mobile) */}
+            <button
+              className="sm:hidden ml-auto rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm inline-flex items-center gap-2"
+              onClick={() => setSettingsOpen(true)}
+              title="詳細設定"
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M19.14,12.94a7.43,7.43,0,0,0,.05-.94,7.43,7.43,0,0,0-.05-.94l2.11-1.65a.5.5,0,0,0,.12-.63l-2-3.46a.5.5,0,0,0-.6-.22l-2.49,1a7.28,7.28,0,0,0-1.63-.94l-.38-2.65A.5.5,0,0,0,13.8,2H10.2a.5.5,0,0,0-.49.41L9.33,5.06a7.28,7.28,0,0,0-1.63.94l-2.49-1a.5.5,0,0,0-.6.22l-2,3.46a.5.5,0,0,0,.12.63L4.86,11.06a7.43,7.43,0,0,0-.05.94,7.43,7.43,0,0,0,.05.94L2.75,14.59a.5.5,0,0,0-.12.63l2,3.46a.5.5,0,0,0,.6.22l2.49-1a7.28,7.28,0,0,0,1.63.94l.38,2.65a.5.5,0,0,0,.49.41h3.6a.5.5,0,0,0,.49-.41l.38-2.65a7.28,7.28,0,0,0,1.63-.94l2.49,1a.5.5,0,0,0,.6-.22l2-3.46a.5.5,0,0,0-.12-.63ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
+              </svg>
+              詳細設定
+            </button>
           </div>
         </header>
 
-        <section className="grid md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <label className="text-sm font-medium">
-              テキスト（フランス語）
-            </label>
-            <textarea
-              className="w-full h-56 rounded-2xl border border-zinc-300 p-3"
-              value={raw}
-              onChange={(e) => {
-                setRaw(e.target.value);
-                clearSelection();
-              }}
-              placeholder="ここにフランス語のテキストを貼り付けてください"
-            />
-          </div>
-        </section>
+        {/* Main + Sidebar wrapper (desktop) */}
+        <div className="sm:grid sm:grid-cols-[1fr_18rem] sm:gap-6">
+          <div className="sm:col-span-1 space-y-6">
+            <section className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium">
+                  テキスト（フランス語）
+                </label>
+                <textarea
+                  className="w-full h-56 rounded-2xl border border-zinc-300 p-3"
+                  value={raw}
+                  onChange={(e) => {
+                    setRaw(e.target.value);
+                    clearSelection();
+                  }}
+                  placeholder="ここにフランス語のテキストを貼り付けてください"
+                />
+              </div>
+            </section>
 
-        <section className="space-y-2 select-none">
-          <div className="flex items-center justify-between">
-            <label className="text-sm font-medium">
-              {mode === "word"
-                ? "単語モード：単語をクリックで即時再生"
-                : "範囲選択モード：2点クリックまたはドラッグで範囲選択（選択部をクリックで解除）"}
-            </label>
-            {mode === "range" && (
-              <button
-                className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-zinc-300 bg-white hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={togglePlaySelected}
-                disabled={
-                  !isSpeaking && (!selectedText() || !selectedText()!.trim())
-                }
-                title={isSpeaking ? "停止" : "選択部分を再生"}
-              >
-                {isSpeaking ? (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <rect x="6" y="5" width="4" height="14" />
-                    <rect x="14" y="5" width="4" height="14" />
-                  </svg>
-                ) : (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                  >
-                    <path d="M8 5v14l11-7z" />
-                  </svg>
-                )}
-                {isSpeaking ? "停止" : "再生"}
-              </button>
-            )}
-          </div>
-
-          <div
-            className="rounded-2xl border border-zinc-300 bg-white p-4 shadow-sm leading-8"
-            onPointerLeave={() => setIsDragging(false)}
-            onClick={(e) => {
-              if (mode !== "range") return;
-              if (
-                e.target === e.currentTarget &&
-                selectedRange() &&
-                anchor === null
-              ) {
-                // 背景（余白）クリックで解除
-                clearSelection();
-              }
-            }}
-            title={
-              mode === "range" && selectedRange()
-                ? "余白クリックで選択解除"
-                : undefined
-            }
-          >
-            {tokens.map((t, i) => {
-              const selected = mode === "range" && isIndexInSelection(i);
-
-              if (t.kind === "ws") {
-                return (
-                  <span
-                    key={i}
-                    className="whitespace-pre-wrap"
-                    onClick={() => {
-                      if (
-                        mode === "range" &&
-                        selectedRange() &&
-                        anchor === null
-                      )
-                        clearSelection();
-                    }}
-                    title={
-                      mode === "range" && selectedRange()
-                        ? "クリックで選択解除"
-                        : undefined
+            <section className="space-y-2 select-none">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium">
+                  {mode === "word"
+                    ? "単語モード：単語をクリックで即時再生"
+                    : "範囲選択モード：2点クリックまたはドラッグで範囲選択（選択部をクリックで解除）"}
+                </label>
+                {mode === "range" && (
+                  <button
+                    className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-zinc-300 bg-white hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
+                    onClick={togglePlaySelected}
+                    disabled={
+                      !isSpeaking &&
+                      (!selectedText() || !selectedText()!.trim())
                     }
+                    title={isSpeaking ? "停止" : "選択部分を再生"}
                   >
-                    {t.text}
-                  </span>
-                );
-              }
+                    {isSpeaking ? (
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <rect x="6" y="5" width="4" height="14" />
+                        <rect x="14" y="5" width="4" height="14" />
+                      </svg>
+                    ) : (
+                      <svg
+                        width="14"
+                        height="14"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M8 5v14l11-7z" />
+                      </svg>
+                    )}
+                    {isSpeaking ? "停止" : "再生"}
+                  </button>
+                )}
+              </div>
 
-              // つながったピル状ハイライト
-              const prevSel = mode === "range" && isIndexInSelection(i - 1);
-              const nextSel = mode === "range" && isIndexInSelection(i + 1);
-
-              const rounded =
-                selected && prevSel && nextSel
-                  ? "rounded-none"
-                  : selected && prevSel && !nextSel
-                  ? "rounded-r-md"
-                  : selected && !prevSel && nextSel
-                  ? "rounded-l-md"
-                  : selected
-                  ? "rounded-md"
-                  : "rounded-sm";
-
-              // レイアウトが縮まって改行が変わるのを防ぐため、
-              // 選択時でもマージンは変えない（見た目の連結は角丸のみで表現）
-              const joiner = "";
-
-              const base =
-                "inline-block px-1 transition-colors cursor-pointer align-baseline touch-none";
-
-              return (
-                <span
-                  key={i}
-                  onClick={() => clickToken(i)}
-                  onPointerDown={(e) => onTokenPointerDown(i, e)}
-                  onPointerEnter={() => onTokenPointerEnter(i)}
-                  onPointerUp={(e) => onTokenPointerUp(i, e)}
-                  className={
-                    base +
-                    " " +
-                    rounded +
-                    joiner +
-                    (selected
-                      ? " bg-yellow-200"
-                      : t.kind === "punct"
-                      ? " text-zinc-500 hover:bg-zinc-100"
-                      : " hover:bg-zinc-100")
+              <div
+                className="rounded-2xl border border-zinc-300 bg-white p-4 shadow-sm leading-8"
+                onPointerLeave={() => setIsDragging(false)}
+                onClick={(e) => {
+                  if (mode !== "range") return;
+                  if (
+                    e.target === e.currentTarget &&
+                    selectedRange() &&
+                    anchor === null
+                  ) {
+                    // 背景（余白）クリックで解除
+                    clearSelection();
                   }
-                >
-                  {t.text}
-                </span>
-              );
-            })}
+                }}
+                title={
+                  mode === "range" && selectedRange()
+                    ? "余白クリックで選択解除"
+                    : undefined
+                }
+              >
+                {tokens.map((t, i) => {
+                  const selected = mode === "range" && isIndexInSelection(i);
+
+                  if (t.kind === "ws") {
+                    return (
+                      <span
+                        key={i}
+                        className="whitespace-pre-wrap"
+                        onClick={() => {
+                          if (
+                            mode === "range" &&
+                            selectedRange() &&
+                            anchor === null
+                          )
+                            clearSelection();
+                        }}
+                        title={
+                          mode === "range" && selectedRange()
+                            ? "クリックで選択解除"
+                            : undefined
+                        }
+                      >
+                        {t.text}
+                      </span>
+                    );
+                  }
+
+                  // つながったピル状ハイライト
+                  const prevSel = mode === "range" && isIndexInSelection(i - 1);
+                  const nextSel = mode === "range" && isIndexInSelection(i + 1);
+
+                  const rounded =
+                    selected && prevSel && nextSel
+                      ? "rounded-none"
+                      : selected && prevSel && !nextSel
+                      ? "rounded-r-md"
+                      : selected && !prevSel && nextSel
+                      ? "rounded-l-md"
+                      : selected
+                      ? "rounded-md"
+                      : "rounded-sm";
+
+                  // レイアウトが縮まって改行が変わるのを防ぐため、
+                  // 選択時でもマージンは変えない（見た目の連結は角丸のみで表現）
+                  const joiner = "";
+
+                  const base =
+                    "inline-block px-1 transition-colors cursor-pointer align-baseline touch-none";
+
+                  return (
+                    <span
+                      key={i}
+                      onClick={() => clickToken(i)}
+                      onPointerDown={(e) => onTokenPointerDown(i, e)}
+                      onPointerEnter={() => onTokenPointerEnter(i)}
+                      onPointerUp={(e) => onTokenPointerUp(i, e)}
+                      className={
+                        base +
+                        " " +
+                        rounded +
+                        joiner +
+                        (selected
+                          ? " bg-yellow-200"
+                          : t.kind === "punct"
+                          ? " text-zinc-500 hover:bg-zinc-100"
+                          : " hover:bg-zinc-100")
+                      }
+                    >
+                      {t.text}
+                    </span>
+                  );
+                })}
+              </div>
+
+              <p className="text-xs text-zinc-500">
+                ※ iOS/Safari
+                は初回のみ操作直後でないと音声が出ないことがあります。最初にいずれかの単語をクリックしてください。
+              </p>
+            </section>
           </div>
 
-          <p className="text-xs text-zinc-500">
-            ※ iOS/Safari
-            は初回のみ操作直後でないと音声が出ないことがあります。最初にいずれかの単語をクリックしてください。
-          </p>
-        </section>
+          {/* Desktop sidebar */}
+          <aside className="hidden sm:block">
+            <div className="sticky top-6">
+              <div className="rounded-2xl border border-zinc-300 bg-white p-4 space-y-4">
+                <h2 className="text-sm font-medium">詳細設定</h2>
+                <div className="space-y-3">
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs text-zinc-500">
+                      スピーチエンジン
+                    </label>
+                    <select
+                      className="rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm"
+                      value={voiceURI}
+                      onChange={(e) => setVoiceURI(e.target.value)}
+                      title="Voice"
+                    >
+                      {voices.map((v) => {
+                        const id = v.voiceURI || v.name;
+                        const label = `${v.name} ${
+                          v.lang ? `(${v.lang})` : ""
+                        }`;
+                        return (
+                          <option key={id} value={id}>
+                            {label}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
+                  <label className="flex items-center gap-2 text-sm justify-between">
+                    <span>速度</span>
+                    <input
+                      className="flex-1 mx-2"
+                      type="range"
+                      min={0.5}
+                      max={1.2}
+                      step={0.05}
+                      value={rate}
+                      onChange={(e) => setRate(parseFloat(e.target.value))}
+                    />
+                    <span className="tabular-nums w-10 text-right">
+                      {rate.toFixed(2)}
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 text-sm justify-between">
+                    <span>ピッチ</span>
+                    <input
+                      className="flex-1 mx-2"
+                      type="range"
+                      min={0.8}
+                      max={1.4}
+                      step={0.05}
+                      value={pitch}
+                      onChange={(e) => setPitch(parseFloat(e.target.value))}
+                    />
+                    <span className="tabular-nums w-10 text-right">
+                      {pitch.toFixed(2)}
+                    </span>
+                  </label>
+                  {mode === "range" && (
+                    <label className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        className="size-4"
+                        checked={autoPlayOnSelect}
+                        onChange={(e) => setAutoPlayOnSelect(e.target.checked)}
+                      />
+                      選択で自動再生
+                    </label>
+                  )}
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
 
         {/* Mobile bottom fixed play/pause for range mode */}
         {mode === "range" && (
@@ -511,6 +551,94 @@ export default function FrenchPracticeApp() {
               )}
               {isSpeaking ? "停止" : "再生"}
             </button>
+          </div>
+        )}
+        {/* Mobile settings drawer */}
+        {settingsOpen && (
+          <div className="sm:hidden">
+            <div
+              className="fixed inset-0 bg-black/30 z-40"
+              onClick={() => setSettingsOpen(false)}
+            />
+            <div
+              role="dialog"
+              aria-modal="true"
+              className="fixed top-0 right-0 h-full w-72 bg-white z-50 shadow-2xl p-4 space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-medium">詳細設定</h2>
+                <button
+                  className="rounded-lg border border-zinc-300 px-2 py-1 text-sm"
+                  onClick={() => setSettingsOpen(false)}
+                >
+                  閉じる
+                </button>
+              </div>
+              <div className="space-y-3">
+                <div className="flex flex-col gap-2">
+                  <label className="text-xs text-zinc-500">
+                    スピーチエンジン
+                  </label>
+                  <select
+                    className="rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm"
+                    value={voiceURI}
+                    onChange={(e) => setVoiceURI(e.target.value)}
+                    title="Voice"
+                  >
+                    {voices.map((v) => {
+                      const id = v.voiceURI || v.name;
+                      const label = `${v.name} ${v.lang ? `(${v.lang})` : ""}`;
+                      return (
+                        <option key={id} value={id}>
+                          {label}
+                        </option>
+                      );
+                    })}
+                  </select>
+                </div>
+                <label className="flex items-center gap-2 text-sm justify-between">
+                  <span>速度</span>
+                  <input
+                    className="flex-1 mx-2"
+                    type="range"
+                    min={0.5}
+                    max={1.2}
+                    step={0.05}
+                    value={rate}
+                    onChange={(e) => setRate(parseFloat(e.target.value))}
+                  />
+                  <span className="tabular-nums w-10 text-right">
+                    {rate.toFixed(2)}
+                  </span>
+                </label>
+                <label className="flex items-center gap-2 text-sm justify-between">
+                  <span>ピッチ</span>
+                  <input
+                    className="flex-1 mx-2"
+                    type="range"
+                    min={0.8}
+                    max={1.4}
+                    step={0.05}
+                    value={pitch}
+                    onChange={(e) => setPitch(parseFloat(e.target.value))}
+                  />
+                  <span className="tabular-nums w-10 text-right">
+                    {pitch.toFixed(2)}
+                  </span>
+                </label>
+                {mode === "range" && (
+                  <label className="flex items-center gap-2 text-sm">
+                    <input
+                      type="checkbox"
+                      className="size-4"
+                      checked={autoPlayOnSelect}
+                      onChange={(e) => setAutoPlayOnSelect(e.target.checked)}
+                    />
+                    選択で自動再生
+                  </label>
+                )}
+              </div>
+            </div>
           </div>
         )}
       </div>
