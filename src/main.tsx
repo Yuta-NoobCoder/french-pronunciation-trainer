@@ -8,3 +8,13 @@ createRoot(document.getElementById("root")!).render(
     <App />
   </StrictMode>
 );
+
+// Register a very small service worker for PWA/offline support
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    const swUrl = `${import.meta.env.BASE_URL}sw.js`;
+    navigator.serviceWorker
+      .register(swUrl)
+      .catch((e) => console.warn("SW registration failed", e));
+  });
+}
