@@ -297,7 +297,7 @@ export default function FrenchPracticeApp() {
 
         {/* Single-column layout on all screens for consistent UX */}
         <div className="space-y-6">
-          <section className="grid md:grid-cols-2 gap-4">
+          <section>
             <div className="space-y-2">
               <label className="text-sm font-medium">
                 テキスト（フランス語）
@@ -318,8 +318,8 @@ export default function FrenchPracticeApp() {
             <div className="flex items-center justify-between">
               <label className="text-sm font-medium">
                 {mode === "word"
-                  ? "単語モード：単語をクリックで即時再生"
-                  : "範囲選択モード：2点クリックまたはドラッグで範囲選択（選択部をクリックで解除）"}
+                  ? "単語モード：単語をクリックして再生"
+                  : "範囲選択モード：2点クリックまたはドラッグして範囲選択（余白をクリックして選択解除）"}
               </label>
               {mode === "range" && (
                 <button
@@ -356,7 +356,7 @@ export default function FrenchPracticeApp() {
             </div>
 
             <div
-              className="rounded-2xl border border-zinc-300 bg-white p-4 shadow-sm leading-8"
+              className="rounded-2xl border border-zinc-300 bg-white p-4 shadow-sm leading-8 min-h-24 sm:min-h-28"
               onPointerLeave={() => setIsDragging(false)}
               onClick={(e) => {
                 if (mode !== "range") return;
@@ -375,6 +375,13 @@ export default function FrenchPracticeApp() {
                   : undefined
               }
             >
+              {tokens.length === 0 && (
+                <span className="text-zinc-400 select-none text-sm">
+                  テキストを入力するとここに単語が表示され、読み上げる
+                  {mode == "range" ? "範囲" : "単語"}
+                  を選択できるようになります。
+                </span>
+              )}
               {tokens.map((t, i) => {
                 const selected = mode === "range" && isIndexInSelection(i);
 
