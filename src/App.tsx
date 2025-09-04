@@ -259,23 +259,20 @@ export default function FrenchPracticeApp() {
               >
                 範囲選択モード
               </button>
+              {/* settings gear moved outside segmented control */}
             </div>
-            {/* Settings trigger (mobile) */}
+            {/* Separate settings button near tabs (mobile only) */}
             <button
-              className="sm:hidden ml-auto rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm inline-flex items-center gap-2"
+              aria-label="詳細設定"
+              className="sm:hidden fixed top-3 right-3 z-50 inline-flex items-center justify-center rounded-xl bg-white border border-zinc-300 p-2 shadow-md"
               onClick={() => setSettingsOpen(true)}
               title="詳細設定"
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M19.14,12.94a7.43,7.43,0,0,0,.05-.94,7.43,7.43,0,0,0-.05-.94l2.11-1.65a.5.5,0,0,0,.12-.63l-2-3.46a.5.5,0,0,0-.6-.22l-2.49,1a7.28,7.28,0,0,0-1.63-.94l-.38-2.65A.5.5,0,0,0,13.8,2H10.2a.5.5,0,0,0-.49.41L9.33,5.06a7.28,7.28,0,0,0-1.63.94l-2.49-1a.5.5,0,0,0-.6.22l-2,3.46a.5.5,0,0,0,.12.63L4.86,11.06a7.43,7.43,0,0,0-.05.94,7.43,7.43,0,0,0,.05.94L2.75,14.59a.5.5,0,0,0-.12.63l2,3.46a.5.5,0,0,0,.6.22l2.49-1a7.28,7.28,0,0,0,1.63.94l.38,2.65a.5.5,0,0,0,.49.41h3.6a.5.5,0,0,0,.49-.41l.38-2.65a7.28,7.28,0,0,0,1.63-.94l2.49,1a.5.5,0,0,0,.6-.22l2-3.46a.5.5,0,0,0-.12-.63ZM12,15.5A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/>
               </svg>
-              詳細設定
             </button>
+            {/* Settings trigger moved to floating button (mobile) */}
           </div>
         </header>
 
@@ -551,96 +548,104 @@ export default function FrenchPracticeApp() {
               )}
               {isSpeaking ? "停止" : "再生"}
             </button>
+            {/* Floating settings button removed; settings icon is in tab bar */}
           </div>
         )}
-        {/* Mobile settings drawer */}
-        {settingsOpen && (
-          <div className="sm:hidden">
-            <div
-              className="fixed inset-0 bg-black/30 z-40"
-              onClick={() => setSettingsOpen(false)}
-            />
-            <div
-              role="dialog"
-              aria-modal="true"
-              className="fixed top-0 right-0 h-full w-72 bg-white z-50 shadow-2xl p-4 space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-medium">詳細設定</h2>
-                <button
-                  className="rounded-lg border border-zinc-300 px-2 py-1 text-sm"
-                  onClick={() => setSettingsOpen(false)}
+        {/* Mobile settings drawer (animated) */}
+        <div className="sm:hidden">
+          <div
+            className={
+              "fixed inset-0 z-40 bg-black/30 transition-opacity duration-300 " +
+              (settingsOpen ? "opacity-100" : "opacity-0 pointer-events-none")
+            }
+            onClick={() => setSettingsOpen(false)}
+          />
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-hidden={!settingsOpen}
+            className={
+              "fixed top-0 right-0 h-full w-72 bg-white z-50 shadow-2xl p-4 space-y-4 transform transition-transform duration-300 " +
+              (settingsOpen
+                ? "translate-x-0"
+                : "translate-x-full pointer-events-none")
+            }
+          >
+            <div className="flex items-center justify-between">
+              <h2 className="text-sm font-medium">詳細設定</h2>
+              <button
+                className="rounded-lg border border-zinc-300 px-2 py-1 text-sm"
+                onClick={() => setSettingsOpen(false)}
+              >
+                閉じる
+              </button>
+            </div>
+            <div className="space-y-3">
+              <div className="flex flex-col gap-2">
+                <label className="text-xs text-zinc-500">
+                  スピーチエンジン
+                </label>
+                <select
+                  className="rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm"
+                  value={voiceURI}
+                  onChange={(e) => setVoiceURI(e.target.value)}
+                  title="Voice"
                 >
-                  閉じる
-                </button>
+                  {voices.map((v) => {
+                    const id = v.voiceURI || v.name;
+                    const label = `${v.name} ${v.lang ? `(${v.lang})` : ""}`;
+                    return (
+                      <option key={id} value={id}>
+                        {label}
+                      </option>
+                    );
+                  })}
+                </select>
               </div>
-              <div className="space-y-3">
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs text-zinc-500">
-                    スピーチエンジン
-                  </label>
-                  <select
-                    className="rounded-xl border border-zinc-300 bg-white px-3 py-2 text-sm"
-                    value={voiceURI}
-                    onChange={(e) => setVoiceURI(e.target.value)}
-                    title="Voice"
-                  >
-                    {voices.map((v) => {
-                      const id = v.voiceURI || v.name;
-                      const label = `${v.name} ${v.lang ? `(${v.lang})` : ""}`;
-                      return (
-                        <option key={id} value={id}>
-                          {label}
-                        </option>
-                      );
-                    })}
-                  </select>
-                </div>
-                <label className="flex items-center gap-2 text-sm justify-between">
-                  <span>速度</span>
+              <label className="flex items-center gap-2 text-sm justify-between">
+                <span>速度</span>
+                <input
+                  className="flex-1 mx-2"
+                  type="range"
+                  min={0.5}
+                  max={1.2}
+                  step={0.05}
+                  value={rate}
+                  onChange={(e) => setRate(parseFloat(e.target.value))}
+                />
+                <span className="tabular-nums w-10 text-right">
+                  {rate.toFixed(2)}
+                </span>
+              </label>
+              <label className="flex items-center gap-2 text-sm justify-between">
+                <span>ピッチ</span>
+                <input
+                  className="flex-1 mx-2"
+                  type="range"
+                  min={0.8}
+                  max={1.4}
+                  step={0.05}
+                  value={pitch}
+                  onChange={(e) => setPitch(parseFloat(e.target.value))}
+                />
+                <span className="tabular-nums w-10 text-right">
+                  {pitch.toFixed(2)}
+                </span>
+              </label>
+              {mode === "range" && (
+                <label className="flex items-center gap-2 text-sm">
                   <input
-                    className="flex-1 mx-2"
-                    type="range"
-                    min={0.5}
-                    max={1.2}
-                    step={0.05}
-                    value={rate}
-                    onChange={(e) => setRate(parseFloat(e.target.value))}
+                    type="checkbox"
+                    className="size-4"
+                    checked={autoPlayOnSelect}
+                    onChange={(e) => setAutoPlayOnSelect(e.target.checked)}
                   />
-                  <span className="tabular-nums w-10 text-right">
-                    {rate.toFixed(2)}
-                  </span>
+                  選択で自動再生
                 </label>
-                <label className="flex items-center gap-2 text-sm justify-between">
-                  <span>ピッチ</span>
-                  <input
-                    className="flex-1 mx-2"
-                    type="range"
-                    min={0.8}
-                    max={1.4}
-                    step={0.05}
-                    value={pitch}
-                    onChange={(e) => setPitch(parseFloat(e.target.value))}
-                  />
-                  <span className="tabular-nums w-10 text-right">
-                    {pitch.toFixed(2)}
-                  </span>
-                </label>
-                {mode === "range" && (
-                  <label className="flex items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      className="size-4"
-                      checked={autoPlayOnSelect}
-                      onChange={(e) => setAutoPlayOnSelect(e.target.checked)}
-                    />
-                    選択で自動再生
-                  </label>
-                )}
-              </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
