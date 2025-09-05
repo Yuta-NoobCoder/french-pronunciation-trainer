@@ -1,11 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64">
-  <!-- Rounded-square background to stand out on white UIs -->
-  <rect x="4" y="4" width="56" height="56" rx="12" fill="#111827"/>
-  <!-- French flag (blue-white-red) with padding inside background -->
-  <g transform="translate(12,12)">
-    <rect x="0" y="0" width="40" height="40" fill="#ffffff"/>
-    <!-- Official navy and red tones -->
-    <rect x="0" y="0" width="13.333" height="40" fill="#002654"/>
-    <rect x="26.666" y="0" width="13.334" height="40" fill="#CE1126"/>
+  <!-- Full-bleed rounded background (helps against white UIs) -->
+  <rect x="0" y="0" width="64" height="64" rx="12" fill="#111827"/>
+  <!-- French flag in official 2:3 aspect ratio, sized to fit inside a 900/1024 safe-circle (D=56.25 on this 64 canvas) -->
+  <!-- Computed: w = D * r / sqrt(r^2+1) ≈ 46.812, h = D / sqrt(r^2+1) ≈ 31.207 (r=1.5) -->
+  <!-- Centered: translate((64-w)/2, (64-h)/2) ≈ (8.594, 16.397) -->
+  <g transform="translate(8.594,16.397)">
+    <rect x="0" y="0" width="46.812" height="31.207" fill="#ffffff"/>
+    <!-- Official navy and red tones; equal vertical bands -->
+    <rect x="0" y="0" width="15.604" height="31.207" fill="#002654"/>
+    <rect x="31.208" y="0" width="15.604" height="31.207" fill="#CE1126"/>
   </g>
 </svg>
