@@ -1,13 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64">
-  <!-- Full-bleed rounded background (helps against white UIs) -->
-  <rect x="0" y="0" width="64" height="64" rx="12" fill="#111827"/>
-  <!-- French flag in official 2:3 aspect ratio, sized to fit inside a 900/1024 safe-circle (D=56.25 on this 64 canvas) -->
-  <!-- Computed: w = D * r / sqrt(r^2+1) ≈ 46.812, h = D / sqrt(r^2+1) ≈ 31.207 (r=1.5) -->
-  <!-- Centered: translate((64-w)/2, (64-h)/2) ≈ (8.594, 16.397) -->
-  <g transform="translate(8.594,16.397)">
-    <rect x="0" y="0" width="46.812" height="31.207" fill="#ffffff"/>
-    <!-- Official navy and red tones; equal vertical bands -->
-    <rect x="0" y="0" width="15.604" height="31.207" fill="#002654"/>
-    <rect x="31.208" y="0" width="15.604" height="31.207" fill="#CE1126"/>
+  <defs>
+    <!-- Circular clip so the flag is cropped to a round icon -->
+    <clipPath id="flagClip">
+      <circle cx="32" cy="32" r="28"/>
+    </clipPath>
+  </defs>
+
+  <!-- Flag content (2:3) centered; clipped to circle. Keep seams clean with slight overlaps. -->
+  <g clip-path="url(#flagClip)" shape-rendering="crispEdges">
+    <!-- Full flag area: height=56, width=84 (2:3), centered at (-10,4) -->
+    <!-- Draw blue/red slightly overlapping into the center, then draw white last to keep visible widths equal. -->
+    <!-- Blue (left third) -->
+    <rect x="-10.08" y="4" width="28.16" height="56" fill="#002654"/>
+    <!-- Red (right third) -->
+    <rect x="45.92" y="4" width="28.16" height="56" fill="#CE1126"/>
+    <!-- White (middle third), drawn last for exact equal width -->
+    <rect x="18" y="4" width="28" height="56" fill="#ffffff"/>
   </g>
+
+  <!-- Outer circular outline placed just outside the clip radius so it doesn't cover the flag -->
+  <circle cx="32" cy="32" r="28.5" fill="none" stroke="#000000" stroke-opacity="1" stroke-width="1"/>
 </svg>
