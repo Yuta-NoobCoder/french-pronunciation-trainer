@@ -229,9 +229,9 @@ export default function FrenchPracticeApp() {
                     : "bg-white hover:bg-zinc-100")
                 }
                 onClick={() => setMode("range")}
-                title="2点クリックで範囲選択"
+                title="2点クリックでフレーズを選択"
               >
-                範囲選択モード
+                フレーズモード
               </button>
               {/* settings gear moved outside segmented control */}
             </div>
@@ -289,7 +289,7 @@ export default function FrenchPracticeApp() {
               <label className="text-sm font-medium">
                 {mode === "word"
                   ? "単語モード：単語をクリックして再生"
-                  : "範囲選択モード：2点クリックで範囲選択（余白クリックで解除）"}
+                  : "フレーズモード：2点クリックでフレーズを選択（余白クリックで解除）"}
               </label>
               {mode === "range" && (
                 <button
@@ -346,9 +346,9 @@ export default function FrenchPracticeApp() {
             >
               {tokens.length === 0 && (
                 <span className="text-zinc-400 select-none text-sm">
-                  テキストを入力するとここに単語が表示され、読み上げる
-                  {mode == "range" ? "範囲" : "単語"}
-                  を選択できるようになります。
+                  テキストを入力すると読み上げる
+                  {mode == "range" ? "フレーズ" : "単語"}
+                  が選択できるようになります。
                 </span>
               )}
               {tokens.map((t, i) => {
