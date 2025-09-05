@@ -6,6 +6,7 @@ const ASSETS = [
   BASE,
   BASE + 'index.html',
   BASE + 'favicon.ico',
+  BASE + 'favicon.svg',
   BASE + 'manifest.webmanifest',
 ];
 
@@ -46,7 +47,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // Static assets: cache-first, fallback to network
-  if (url.pathname.startsWith(BASE + 'assets/') || url.pathname === BASE + 'favicon.ico') {
+  if (url.pathname.startsWith(BASE + 'assets/') || url.pathname === BASE + 'favicon.ico' || url.pathname === BASE + 'favicon.svg') {
     event.respondWith(
       caches.match(req).then((cached) => {
         if (cached) return cached;

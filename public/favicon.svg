@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64">
+  <!-- Rounded-square background to stand out on white UIs -->
+  <rect x="4" y="4" width="56" height="56" rx="12" fill="#111827"/>
+  <!-- French flag (blue-white-red) with padding inside background -->
+  <g transform="translate(12,12)">
+    <rect x="0" y="0" width="40" height="40" fill="#ffffff"/>
+    <rect x="0" y="0" width="13.333" height="40" fill="#0055A4"/>
+    <rect x="26.666" y="0" width="13.334" height="40" fill="#EF4135"/>
+  </g>
+</svg>
