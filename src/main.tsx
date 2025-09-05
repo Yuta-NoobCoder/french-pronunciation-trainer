@@ -17,5 +17,13 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker
       .register(swUrl)
       .catch((e) => console.warn("SW registration failed", e));
+
+    // When a new SW takes control, force a one-time reload to pick fresh cache
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (reloaded) return;
+      reloaded = true;
+      window.location.reload();
+    });
   });
 }

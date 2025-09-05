@@ -1,5 +1,5 @@
 // Very small service worker for offline-first static assets
-const CACHE = 'fr-pron-trainer-v1';
+const CACHE = 'fr-pron-trainer-v3';
 // Scope-aware base path for Project Pages
 const BASE = new URL(self.registration.scope).pathname; // e.g. '/repo/' or '/'
 const ASSETS = [
