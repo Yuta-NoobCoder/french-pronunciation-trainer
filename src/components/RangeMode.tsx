@@ -91,24 +91,6 @@ export default function RangeMode({
         <label className="text-sm font-medium">
           フレーズモード：2点クリックでフレーズを選択（余白クリックで解除）
         </label>
-        <button
-          className="hidden sm:inline-flex items-center gap-2 px-3 py-1.5 text-sm rounded-lg border border-zinc-300 bg-white hover:bg-zinc-100 disabled:opacity-50 disabled:cursor-not-allowed"
-          onClick={togglePlaySelected}
-          disabled={!isSpeaking && (!selectedText() || !selectedText()!.trim())}
-          title={isSpeaking ? "停止" : "選択部分を再生"}
-        >
-          {isSpeaking ? (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <rect x="6" y="5" width="4" height="14" />
-              <rect x="14" y="5" width="4" height="14" />
-            </svg>
-          ) : (
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          )}
-          {isSpeaking ? "停止" : "再生"}
-        </button>
       </div>
 
       <div className="rounded-xl border border-zinc-200 p-3 bg-white min-h-24">
@@ -171,8 +153,8 @@ export default function RangeMode({
         })}
       </div>
 
-      {/* Mobile bottom fixed play/pause for range mode */}
-      <div className="sm:hidden">
+      {/* Floating bottom fixed play/pause (all screens) */}
+      <div>
         <button
           className="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 inline-flex items-center gap-2 rounded-full bg-zinc-900 text-white px-5 py-3 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           onClick={togglePlaySelected}
